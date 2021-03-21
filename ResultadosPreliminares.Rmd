@@ -1,0 +1,22 @@
+---
+title: "ResultadosPreliminares"
+author: "José Eduardo Zárate Aranda"
+date: "3/20/2021"
+output: pdf_document
+---
+# Inicialización del codigo
+```{r}
+shell("cls")
+rm(list = ls(all.names = TRUE)) 
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+DatosDeVinos <- read_excel("~/R/ProyectoAspectosAnaliticos/DatosDeVinos.xlsx", col_names = TRUE)
+attach(DatosDeVinos)
+```
+
