@@ -10,13 +10,52 @@ shell("cls")
 rm(list = ls(all.names = TRUE)) 
 ```
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#Importe y acomodo de datos
+```{r}
+#Imports Dataset
+library(readxl)#
+DatosDeVinos <- read_excel("~/R/ProyectoAspectosAnaliticos/DatosDeVinos.xlsx", sheet=2)
+DatosDeVinos <- as.data.frame(DatosDeVinos)
+#Creates rownames for each row with variable Type
+str(DatosDeVinos)
+rownames(DatosDeVinos) <- c(DatosDeVinos$Type)
+head(DatosDeVinos)
+#Removes Type variable
+DatosDeVinos <- DatosDeVinos[,-1]
+head(DatosDeVinos)
+```
+
+# Ejecución para el gráfico del dendograma de vinos
+```{r}
+#Reviews the k value
+library(factoextra)
+## Loading required package: ggplot2
+## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+fviz_nbclust(DatosDeVinos,kmeans,method = "wss")+geom_vline(xintercept = 4, linetype=2)+labs(subtitle="Elbow method")
+
 ```
 
 ```{r}
-library(readxl)
-DatosDeVinos <- read_excel("~/R/ProyectoAspectosAnaliticos/DatosDeVinos.xlsx", col_names = TRUE)
-attach(DatosDeVinos)
+#Scales the dataset by taking the mean deviations of each column and by dividing the centered columns of data by their standard deviations
+DatosDeVinos <- scale(DatosDeVinos)
+#Computes and returns the distance matrix computed by using the specified distance measure to compute the distances between the rows of a data matrix
+library(stats)
+res.dist <- dist(x=DatosDeVinos, method="euclidean")
+output <- as.matrix(res.dist)
+#Applies the hierarchical clustering
+res.hc <- hclust(d=res.dist,method = "complete")
 ```
 
+#Ajustes en formato y graficación
+
+```{r}
+#Formats and plots the dendogram:
+#Add colors to clusters
+fviz_dend(x=res.hc, cex=0.7, lwd=0.7, k=4, k_colors=c("red","green3","blue","magenta"))
+```
+
+```{r}
+#Graphs the dendogram with specifications in format
+fviz_dend(res.hc, cex=0.8,lwd=0.8,k=4,rect=TRUE,k_colors="jco",rect_border = "jco",rect_fill = TRUE,, ylab="Altura",xlab = "Separación", ggtheme=theme_bw()) + ggtitle("Dendograma de los 30 tipos de vino") + theme(plot.title = element_text(hjust = 0.5))
+
+```
