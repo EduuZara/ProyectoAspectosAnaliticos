@@ -1,0 +1,28 @@
+---
+title: "ResultadosFinales"
+author: "José Eduardo Zárate Aranda"
+date: "5/1/2021"
+output: pdf_document
+---
+
+# Inicialización del codigo
+```{r}
+shell("cls")
+rm(list = ls(all.names = TRUE)) 
+```
+
+#Importe y acomodo de datos
+```{r}
+#Imports Dataset
+library(readxl)#
+normalize <- function(x){return((x-min(x))/(max(x)-min(x)))}
+RMN <- read_excel("~/R/ProyectoAspectosAnaliticos/DatosDeVinos.xlsx", sheet=7)
+RMN <- as.data.frame(RMN)
+normalize(Wine_1:Wine_30)
+attach(RMN)
+```
+
+```{r}
+plot(PPM,Intensidades)
+```
+
